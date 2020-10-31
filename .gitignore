@@ -8,3 +8,7 @@
 /Rewards.API/obj
 /Rewards.Core/obj
 /Rewards.Infra/obj
+/Rewards.Core/bin/Debug/netcoreapp3.1
+/Rewards.Infra/bin/Debug/netcoreapp3.1
+/Rewards.Service/bin/Debug/netcoreapp3.1
+/Rewards.Service/obj
