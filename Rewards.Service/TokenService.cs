@@ -22,13 +22,16 @@ namespace Rewards.Service
         public string GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
+
             var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("SecretToken"));
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                     {
                         new Claim(ClaimTypes.Email, user.Email),
-                        new Claim(ClaimTypes.Name, user.Name)
+                        new Claim(ClaimTypes.Name, user.Name),
+                        new Claim("is_completed", (!string.IsNullOrWhiteSpace(user.Cpf)).ToString().ToLower())
                     }),
                 Expires = DateTime.UtcNow.AddMinutes(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

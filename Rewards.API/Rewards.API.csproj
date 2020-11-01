@@ -4,7 +4,6 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>bce9543a-525f-4fa2-a72f-a588a632d6ae</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\Rewards</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>

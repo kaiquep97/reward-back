@@ -35,11 +35,21 @@ namespace Rewards.API.Controllers
 
             user.Password = "";
 
-            return Ok(new
-            {
-                user = user,
-                token = token
-            });
+            return Ok(new { token });
+        }
+
+        [HttpPost]
+        [Route("loginSSO")]
+        public async Task<IActionResult> AuthenticateBySSO([FromBody] LoginViewModel model)
+        {
+            var user = _userRepository.Get(model.Email);
+
+            if (user == null)
+                _userRepository.Insert(null);
+
+            var token = _tokenService.GenerateToken(user);
+
+            return Ok(new { token });
         }
     }
 }

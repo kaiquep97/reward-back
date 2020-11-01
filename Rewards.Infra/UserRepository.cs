@@ -25,6 +25,16 @@ namespace Rewards.Infra
             throw new NotImplementedException();
         }
 
+        public User Get(string email)
+        {
+            var users = new List<User>
+            {
+                new User { Email = "teste@teste.com", Password = "1234", Name = "Teste" }
+            };
+
+            return users.Where(x => x.Email.ToLower() == email.ToLower()).FirstOrDefault();
+        }
+
         public void Insert(User item)
         {
             throw new NotImplementedException();
