@@ -1,4 +1,5 @@
-﻿using Rewards.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Rewards.Core.Entities;
 using Rewards.Core.Interfaces;
 using Rewards.Infra.Persistence;
 using System;
@@ -36,6 +37,13 @@ namespace Rewards.Infra
         public User Get(Expression<Func<User, bool>> expression)
         {
             return _context.User.FirstOrDefault(expression);
+        }
+
+        public User GetWithPontuation(int id)
+        {
+            var user = _context.User.Include(x => x.Points).FirstOrDefault(x => x.Id == id);
+
+            return user;
         }
 
         public void Insert(User item)

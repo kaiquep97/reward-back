@@ -32,7 +32,7 @@ namespace Rewards.API.Controllers
         [HttpGet("{id}")]
         public User Get(int id)
         {
-            return _userRepository.Get(id);
+            return _userRepository.GetWithPontuation(id);
         }
 
         [HttpPut("{id}")]

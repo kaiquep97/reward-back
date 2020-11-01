@@ -26,6 +26,8 @@ namespace Rewards.Service
             user.Cpf = userToBeSaved.Cpf;
             user.Email = userToBeSaved.Email;
             user.Password = userToBeSaved.Password;
+            user.Image = userToBeSaved.Image;
+            user.Name = userToBeSaved.Name;
 
             _userRepository.Update(user);
         }

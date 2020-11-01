@@ -24,7 +24,7 @@ namespace Rewards.Infra
 
         public IEnumerable<Product> GetProductsByCategory(int categoryId, int pageSize, int pageIndex)
         {
-            throw new NotImplementedException();
+            return _context.Product.Where(x => x.CategoryId == categoryId).Skip(pageSize * (pageIndex - 1)).Take(pageSize);
         }
 
         public void Insert(Product item)

@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Rewards.Core.Interfaces;
 using Rewards.Infra;
 using Rewards.Infra.Persistence;
@@ -58,11 +59,23 @@ namespace Rewards.API
             });
             #endregion
 
+            services.AddSwaggerGen(c =>
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Rewards", Version = "v1" })
+            );
+
             services.AddDbContext<Context>(options => options.UseInMemoryDatabase("RewardDb"));
 
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<IPointRepository, PointRepository>();
+
             services.AddTransient<ITokenService, TokenService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IPointService, PointService>();
+
+
+            services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,6 +99,12 @@ namespace Rewards.API
                 options.AllowAnyMethod();
                 options.AllowAnyHeader();
             });
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("v1/swagger.json", "Rewards API");
+                });
 
             app.UseEndpoints(endpoints =>
             {
