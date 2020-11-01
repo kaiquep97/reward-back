@@ -4,6 +4,7 @@ using Rewards.Infra.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Rewards.Infra
@@ -30,6 +31,11 @@ namespace Rewards.Infra
         public User Get(string email)
         {
             return _context.User.Where(x => x.Email.ToLower() == email.ToLower()).FirstOrDefault();
+        }
+
+        public User Get(Expression<Func<User, bool>> expression)
+        {
+            return _context.User.FirstOrDefault(expression);
         }
 
         public void Insert(User item)
