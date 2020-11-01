@@ -18,6 +18,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Rewards.API.Filters;
+using Rewards.Core.Configuration;
 using Rewards.Core.Interfaces;
 using Rewards.Core.Profiles;
 using Rewards.Core.Validators;
@@ -39,11 +40,15 @@ namespace Rewards.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+            services.Configure<AzureStorageConfig>(Configuration.GetSection("AzureStorageConfig"));
+
             services.AddAutoMapper(typeof(UserProfile));
 
-            services.AddMvc(options => options.Filters.Add(typeof(ModelStateValidatorFilter)))
-            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateUserViewModelValidator>())
-            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services
+                .AddMvc(options => options.Filters.Add(typeof(ModelStateValidatorFilter)))
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateUserViewModelValidator>())
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddControllers();
 
@@ -80,11 +85,14 @@ namespace Rewards.API
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<IPointRepository, PointRepository>();
+            services.AddTransient<IImageRepository, ImageRepository>();
+
 
             services.AddTransient<ITokenService, TokenService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IPointService, PointService>();
-
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IImageService, ImageService>();
 
             services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
         }

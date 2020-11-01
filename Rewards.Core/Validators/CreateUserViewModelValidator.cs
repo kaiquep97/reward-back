@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Rewards.Core.Validators
 {
-    public class CreateUserViewModelValidator: AbstractValidator<UserViewModel>
+    public class CreateUserViewModelValidator: AbstractValidator<CreateUserViewModel>
     {
         public CreateUserViewModelValidator()
         {
@@ -17,6 +17,10 @@ namespace Rewards.Core.Validators
             RuleFor(c => c.Name)
                 .NotEmpty()
                 .WithMessage("Nome não informado");
+
+            RuleFor(x => x.Email)
+                .NotEmpty()
+                .WithMessage("Email não informado");
         }
     }
 }

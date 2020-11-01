@@ -17,6 +17,7 @@ namespace Rewards.Core.ViewModels
     public class CreateUserViewModel
     {
         public string Name { get; set; }
+        public string Email { get; set; }
         public string Cpf { get; set; }
         public DateTime BirthDate { get; set; }
         public string Image { get; set; }

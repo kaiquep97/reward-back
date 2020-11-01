@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Rewards.Core.Entities;
 using Rewards.Core.Interfaces;
@@ -18,12 +19,15 @@ namespace Rewards.API.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserService _userService;
+        private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
 
-        public UserController(IUserRepository userRepository, IUserService userService, IMapper mapper)
+        public UserController(IUserRepository userRepository, IUserService userService, IMapper mapper, ITokenService tokenService)
         {
             _userRepository = userRepository;
             _userService = userService;
+            _tokenService = tokenService;
+
             _mapper = mapper;
         }
 
@@ -58,6 +62,20 @@ namespace Rewards.API.Controllers
             return Ok();
 
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult Post([FromBody] CreateUserViewModel value)
+        {
+            var user = _mapper.Map<User>(value);
+
+            _userRepository.Insert(user);
+
+            var token =_tokenService.GenerateToken(user);
+
+            return Ok(new { token });
+        }
+
 
     }
 }
