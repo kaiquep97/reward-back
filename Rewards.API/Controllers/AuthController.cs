@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Rewards.Core.Entities;
 using Rewards.Core.Interfaces;
 using Rewards.Core.ViewModels;
 
@@ -33,8 +34,6 @@ namespace Rewards.API.Controllers
 
             var token = _tokenService.GenerateToken(user);
 
-            user.Password = "";
-
             return Ok(new { token });
         }
 
@@ -45,7 +44,11 @@ namespace Rewards.API.Controllers
             var user = _userRepository.Get(model.Email);
 
             if (user == null)
-                _userRepository.Insert(null);
+            {
+                var newUser = new User(model.Name, model.Email);
+                _userRepository.Insert(newUser);
+                user = newUser;
+            }
 
             var token = _tokenService.GenerateToken(user);
 

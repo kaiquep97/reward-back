@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Rewards.Core.Interfaces;
 using Rewards.Infra;
+using Rewards.Infra.Persistence;
 using Rewards.Service;
 
 namespace Rewards.API
@@ -56,6 +58,8 @@ namespace Rewards.API
             });
             #endregion
 
+            services.AddDbContext<Context>(options => options.UseInMemoryDatabase("RewardDb"));
+
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ITokenService, TokenService>();
         }
@@ -74,6 +78,13 @@ namespace Rewards.API
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseCors(options =>
+            {
+                options.AllowAnyOrigin();
+                options.AllowAnyMethod();
+                options.AllowAnyHeader();
+            });
 
             app.UseEndpoints(endpoints =>
             {

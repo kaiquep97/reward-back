@@ -14,6 +14,23 @@ namespace Rewards.Core.Entities
         public string Password { get; set; }
         public virtual ICollection<Points> Points { get; set; }
         public virtual ICollection<Transaction> Transactions { get; set; }
+        public User()
+        {
+        }
+
+        public User(string name, string email)
+        {
+            Name = name;
+            Email = email;
+        }
+
+        public User(string name, string email, string cpf, DateTime birthDate, string password)
+            :this(name, email)
+        {
+            Cpf = cpf;
+            BirthDate = birthDate;
+            Password = password;
+        }
     }
 
 

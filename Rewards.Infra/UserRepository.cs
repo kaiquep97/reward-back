@@ -1,5 +1,6 @@
 ﻿using Rewards.Core.Entities;
 using Rewards.Core.Interfaces;
+using Rewards.Infra.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,45 +10,43 @@ namespace Rewards.Infra
 {
     public class UserRepository : IUserRepository
     {
+        private readonly Context _context;
+
+        public UserRepository(Context context)
+        {
+            _context = context;
+        }
 
         public User Get(string email, string password)
         {
-            var users = new List<User>
-            {
-                new User { Email = "teste@teste.com", Password = "1234", Name = "Teste" }
-            };
-
-            return users.Where(x => x.Email.ToLower() == email.ToLower() && x.Password == password.ToLower()).FirstOrDefault();
+            return _context.User.Where(x => x.Email.ToLower() == email.ToLower() && x.Password == password.ToLower()).FirstOrDefault();
         }
 
         public User Get(int id)
         {
-            throw new NotImplementedException();
+            return _context.User.FirstOrDefault(x => x.Id == id);
         }
 
         public User Get(string email)
         {
-            var users = new List<User>
-            {
-                new User { Email = "teste@teste.com", Password = "1234", Name = "Teste" }
-            };
-
-            return users.Where(x => x.Email.ToLower() == email.ToLower()).FirstOrDefault();
+            return _context.User.Where(x => x.Email.ToLower() == email.ToLower()).FirstOrDefault();
         }
 
         public void Insert(User item)
         {
-            throw new NotImplementedException();
+            _context.User.Add(item);
+            _context.SaveChanges();
         }
 
         public IEnumerable<User> List()
         {
-            throw new NotImplementedException();
+            return _context.User.ToList();
         }
 
         public void Update(User item)
         {
-            throw new NotImplementedException();
+            _context.User.Update(item);
+            _context.SaveChanges();
         }
     }
 }
