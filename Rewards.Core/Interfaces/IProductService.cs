@@ -9,6 +9,8 @@ namespace Rewards.Core.Interfaces
     {
         IEnumerable<Product> GetProductsByCategory(int categoryId, int? pageSize, int? pageIndex);
 
+        IEnumerable<Product> GetProductsPaginated(int? pageSize, int? pageIndex);
+
         void Update(Product productToBeSaved, Product product);
     }
 }

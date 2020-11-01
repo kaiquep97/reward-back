@@ -1,4 +1,5 @@
-﻿using Rewards.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Rewards.Core.Entities;
 using Rewards.Core.Interfaces;
 using Rewards.Infra.Persistence;
 using System;
@@ -25,6 +26,14 @@ namespace Rewards.Infra
         public IEnumerable<Product> GetProductsByCategory(int categoryId, int pageSize, int pageIndex)
         {
             return _context.Product.Where(x => x.CategoryId == categoryId).Skip(pageSize * (pageIndex - 1)).Take(pageSize);
+        }
+
+        public IEnumerable<Product> GetProductsPaginated(int pageSize, int pageIndex)
+        {
+            return _context.Product
+                            .Include(p=> p.Category)
+                            .Skip(pageSize * (pageIndex - 1))
+                            .Take(pageSize);
         }
 
         public void Insert(Product item)

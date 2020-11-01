@@ -85,11 +85,11 @@ namespace Rewards.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Rewards", Version = "v1" })
             );
 
-            //services.AddDbContext<Context>(options => options.UseInMemoryDatabase("RewardDb"));
+            services.AddDbContext<Context>(options => options.UseInMemoryDatabase("RewardDb"));
 
-            var connectionString = Configuration.GetConnectionString("RewardDb");
+            //var connectionString = Configuration.GetConnectionString("RewardDb");
 
-            services.AddDbContext<Context>(options => options.UseSqlServer(connectionString));
+            //services.AddDbContext<Context>(options => options.UseSqlServer(connectionString));
             #region Injeção de Dependencia
 
             services.AddTransient<IUserRepository, UserRepository>();

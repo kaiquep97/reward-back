@@ -28,9 +28,20 @@ namespace Rewards.API.Controllers
 
         [HttpGet]
         [Route("GetByCategoryId")]
+        [AllowAnonymous]
         public IActionResult GetProducts([FromQuery]int category_id, int? pageIndex, int? pageSize)
         {
             var products = _productService.GetProductsByCategory(category_id, pageSize, pageIndex);
+
+            return Ok(products);
+        }
+
+        [HttpGet]
+        [Route("GetPaginated")]
+        [AllowAnonymous]
+        public IActionResult GetProducts(int? pageIndex, int? pageSize)
+        {
+            var products = _productService.GetProductsPaginated(pageSize, pageIndex);
 
             return Ok(products);
         }
@@ -51,7 +62,7 @@ namespace Rewards.API.Controllers
 
             _productService.Insert(product);
 
-            return CreatedAtAction(nameof(Get), data, new { Id = product.Id });
+            return Ok();
         }
 
         [HttpPut]

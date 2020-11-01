@@ -19,6 +19,7 @@ namespace Rewards.API.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IEnumerable<Category> Get()
         {
             return _categoryRepository.List();

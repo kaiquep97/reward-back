@@ -25,6 +25,11 @@ namespace Rewards.Service
             return _productRepository.GetProductsByCategory(categoryId, pageSize ?? 20, pageIndex ?? 1);
         }
 
+        public IEnumerable<Product> GetProductsPaginated(int? pageSize, int? pageIndex)
+        {
+            return _productRepository.GetProductsPaginated(pageSize ?? 20, pageIndex ?? 1);
+        }
+
         public void Insert(Product item)
         {
             item.Status = Core.Enums.ProductStatusEnum.active;

@@ -6,6 +6,7 @@ namespace Rewards.Core.Interfaces
     public interface IProductRepository: IQuery<Product>, ICommand<Product>
     {
         IEnumerable<Product> GetProductsByCategory(int categoryId, int pageSize, int pageIndex);
+        IEnumerable<Product> GetProductsPaginated(int pageSize, int pageIndex);
     }
 
 }
