@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Rewards.Core.Entities;
 using Rewards.Core.Interfaces;
+using Rewards.Core.ViewModels;
 
 namespace Rewards.API.Controllers
 {
@@ -16,10 +18,12 @@ namespace Rewards.API.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly IMapper _mapper;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, IMapper mapper)
         {
             _productService = productService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -40,22 +44,27 @@ namespace Rewards.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Product product)
+        public IActionResult Post([FromBody] CreateProductViewModel data)
         {
+            var product = _mapper.Map<Product>(data);
+
+
             _productService.Insert(product);
 
-            return Ok();
+            return CreatedAtAction(nameof(Get), data, new { Id = product.Id });
         }
 
         [HttpPut]
-        public IActionResult Put(int id, [FromBody] Product data)
+        public IActionResult Put(int id, [FromBody] UpdateProductViewModel data)
         {
             var product = _productService.Get(id);
 
             if (product == null)
                 return NotFound(new { message = "Produto não encontrado" });
 
-            _productService.Update(data, product);
+            var newProduct = _mapper.Map<Product>(data);
+
+            _productService.Update(newProduct, product);
 
             return Ok();
         }

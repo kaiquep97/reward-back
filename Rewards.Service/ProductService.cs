@@ -27,6 +27,8 @@ namespace Rewards.Service
 
         public void Insert(Product item)
         {
+            item.Status = Core.Enums.ProductStatusEnum.active;
+
             _productRepository.Insert(item);
         }
 
@@ -47,7 +49,7 @@ namespace Rewards.Service
             product.Image = productToBeSaved.Image;
             product.Name = productToBeSaved.Name;
             product.Points = productToBeSaved.Points;
-            product.Status = product.Status;
+            product.Status = productToBeSaved.Status;
 
             Update(product);
         }

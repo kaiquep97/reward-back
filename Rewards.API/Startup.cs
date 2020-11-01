@@ -17,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
 using Rewards.API.Filters;
 using Rewards.Core.Configuration;
 using Rewards.Core.Interfaces;
@@ -43,12 +44,17 @@ namespace Rewards.API
             services.AddOptions();
             services.Configure<AzureStorageConfig>(Configuration.GetSection("AzureStorageConfig"));
 
+            #region AutoMappers
             services.AddAutoMapper(typeof(UserProfile));
+            services.AddAutoMapper(typeof(ProductProfile));
+            #endregion
 
+            #region FluentValidator
             services
-                .AddMvc(options => options.Filters.Add(typeof(ModelStateValidatorFilter)))
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateUserViewModelValidator>())
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                    .AddMvc(options => options.Filters.Add(typeof(ModelStateValidatorFilter)))
+                    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateUserViewModelValidator>())
+                    .SetCompatibilityVersion(CompatibilityVersion.Version_3_0); 
+            #endregion
 
             services.AddControllers();
 
@@ -79,7 +85,12 @@ namespace Rewards.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Rewards", Version = "v1" })
             );
 
-            services.AddDbContext<Context>(options => options.UseInMemoryDatabase("RewardDb"));
+            //services.AddDbContext<Context>(options => options.UseInMemoryDatabase("RewardDb"));
+
+            var connectionString = Configuration.GetConnectionString("RewardDb");
+
+            services.AddDbContext<Context>(options => options.UseSqlServer(connectionString));
+            #region Injeção de Dependencia
 
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
@@ -94,7 +105,14 @@ namespace Rewards.API
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IImageService, ImageService>();
 
-            services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            #endregion
+
+            services.AddControllers()
+                .AddNewtonsoftJson(options => { 
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                    options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
