@@ -39,7 +39,7 @@ namespace Rewards.API.Controllers
 
         [HttpPost]
         [Route("loginSSO")]
-        public async Task<IActionResult> AuthenticateBySSO([FromBody] LoginViewModel model)
+        public async Task<IActionResult> AuthenticateBySSO([FromBody] LoginSSOViewModel model)
         {
             var user = _userRepository.Get(model.Email);
 

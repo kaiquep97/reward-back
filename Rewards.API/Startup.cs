@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,7 +17,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Rewards.API.Filters;
 using Rewards.Core.Interfaces;
+using Rewards.Core.Profiles;
+using Rewards.Core.Validators;
 using Rewards.Infra;
 using Rewards.Infra.Persistence;
 using Rewards.Service;
@@ -34,6 +39,12 @@ namespace Rewards.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(UserProfile));
+
+            services.AddMvc(options => options.Filters.Add(typeof(ModelStateValidatorFilter)))
+            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateUserViewModelValidator>())
+            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
             services.AddControllers();
 
 
