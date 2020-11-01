@@ -7,6 +7,6 @@ namespace Rewards.Core.Interfaces
 {
     public interface IUserService
     {
-        void Update(int id, User user);
+        void Update(User userToBeSaved, User user);
     }
 }

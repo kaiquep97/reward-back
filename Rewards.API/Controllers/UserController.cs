@@ -38,11 +38,12 @@ namespace Rewards.API.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] User value)
         {
-            var user = _userRepository.Get(id);
-            if (user == null)
+            var usu = _userRepository.Get(id);
+
+            if (usu == null)
                 return NotFound(new { message = "Usuário não encontrado" });
 
-            _userService.Update(id, value);
+            _userService.Update(value, usu);
 
             return Ok();
 

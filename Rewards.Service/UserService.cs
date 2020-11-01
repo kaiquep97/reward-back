@@ -15,13 +15,17 @@ namespace Rewards.Service
             _userRepository = userRepository;
         }
 
-        public void Update(int id, User user)
+        public void Update(User userToBeSaved, User user)
         {
-            if (CpfIsAlreadyExists(id, user.Cpf))
+            if (CpfIsAlreadyExists(user.Id, userToBeSaved.Cpf))
                 throw new Exception("CPf já cadastrado");
 
-            if (EmailAlreadyExists(id, user.Email))
+            if (EmailAlreadyExists(user.Id, userToBeSaved.Email))
                 throw new Exception("Email já cadastrado");
+
+            user.Cpf = userToBeSaved.Cpf;
+            user.Email = userToBeSaved.Email;
+            user.Password = userToBeSaved.Password;
 
             _userRepository.Update(user);
         }

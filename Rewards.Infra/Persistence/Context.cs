@@ -10,6 +10,8 @@ namespace Rewards.Infra.Persistence
     public class Context:DbContext
     {
         public DbSet<User> User { get; set; }
+        public DbSet<Category> Category { get; set; }
+        public DbSet<Product> Product { get; set; }
 
         public Context(DbContextOptions<Context> options):base(options)
         {
